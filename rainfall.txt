@@ -1,0 +1,18 @@
+head(precip)
+mean(precip)
+t.statistic <- function(thesample, thepopulation) {
+  numerator <- mean(thesample) - mean(thepopulation)
+  denominator <- sd(thesample) / sqrt(length(thesample))
+  numerator / denominator
+}
+population.precipitation <- rnorm(1e5, mean = 38)
+t.stats <- replicate(1e4, {
+  a.sample <- sample(population.precipitation, 70)
+  t.statistic(a.sample, population.precipitation)
+})
+library(ggplot2)
+qplot(t.stats, geom = "histogram", color = I("white"), xlab = "sampling distribution of t-statistic", ylab = "frequency")
+t.statistic(precip, population.precipitation)
+qt(0.025, df = 69)
+t.test(precip, mu = 38)
+t.test(precip, mu = 38, alternative = "less")

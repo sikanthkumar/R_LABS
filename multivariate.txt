@@ -1,0 +1,43 @@
+# Training Function
+bivariate_train <- function(data) {
+  mean_vec <- colMeans(data)
+  cov_mat <- cov(data)
+  return(list(mean_vec = mean_vec, cov_mat = cov_mat))
+}
+
+# Prediction Function
+bivariate_predict <- function(train_model, height, weight) {
+  mean_vec <- train_model$mean_vec
+  cov_mat <- train_model$cov_mat
+  prob_adult <- dmvnorm(c(height, weight), mean = mean_vec, sigma = cov_mat)
+  
+  if (prob_adult >= 0.5) {
+    return("Person is classified as an adult based on height and weight.")
+  } else {
+    return("Person is not classified as an adult based on height and weight.")
+  }
+}
+
+# Example data (height and weight)
+data <- matrix(c(165, 170, 160, 154, 175, 155, 167, 177, 158, 178,
+                 78, 71, 60, 53, 72, 51, 64, 65, 55, 69), ncol = 2)
+
+# Train the model
+model <- bivariate_train(data)
+
+# Prompt user to input height and weight
+height <- as.numeric(readline(prompt = "Enter the height: "))
+weight <- as.numeric(readline(prompt = "Enter the weight: "))
+
+# Make prediction
+prediction <- bivariate_predict(model, height, weight)
+print(prediction)
+
+# Generate data for bell-shaped surface plot
+x <- seq(-3, 3, length.out = 100)
+y <- seq(-3, 3, length.out = 100)
+z <- outer(x, y, function(x, y) dnorm(x, mean = 0, sd = 1) * dnorm(y, mean = 0, sd = 1))
+
+# Create 3D surface plot
+persp(x, y, z, theta = 30, phi = 30, col = "lightblue", border = NA,
+      xlab = "X", ylab = "Y", zlab = "Density", main = "Multidimensional Bell-Shaped Plot")

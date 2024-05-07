@@ -1,0 +1,36 @@
+uvtrain <- function(hm, hf) {
+  mm <- mean(hm)
+  vm <- var(hm)
+  hmm <- seq(min(hm) - 15, max(hm) + 15)
+  pmh <- dnorm(hmm, mean = mm, sd = sqrt(vm))
+  
+  mf <- mean(hf)
+  vf <- var(hf)
+  hff <- seq(min(hf) - 15, max(hf) + 15)
+  pff <- dnorm(hff, mean = mf, sd = sqrt(vf))
+  
+  plot(hmm, pmh, type="l", col="red", pch=9, xlim=c(min(hff), max(hmm)), 
+       xlab="Height of Person(Male and Female)", 
+       ylab="p(male | hm) and p(female | hf)", 
+       main="Normal Density")
+  lines(hff, pff, col = "blue")
+  list(mm, vm, mf, vf)
+}
+
+uvtest <- function(mm, vm, mf, vf, ht) {
+  pm <- dnorm(ht, mean = mm, sd = sqrt(vm))
+  pf <- dnorm(ht, mean = mf, sd = sqrt(vf))
+  if(pm > pf) 
+    print("The given Height of Person is Male") 
+  else 
+    print("The given Height of Person is Female") 
+}
+
+cat("\014")
+
+hm <- c(165, 170, 160, 154, 175, 155, 167, 177, 158, 178)
+hf <- c(140, 145, 149, 152, 157, 135, 139, 160, 155, 163)
+mv <- uvtrain(hm, hf)
+
+ht <- as.numeric(readline(prompt='Enter the height of person for prediction=')) 
+uvtest(mv[[1]], mv[[2]], mv[[3]], mv[[4]], ht)

@@ -1,0 +1,38 @@
+# Univariate Training Function
+univariate_train <- function(height_data) {
+  mean_height <- mean(height_data)
+  sd_height <- sd(height_data)
+  return(list(mean_height = mean_height, sd_height = sd_height))
+}
+
+# Prediction Function
+univariate_predict <- function(train_model, height) {
+  mean_height <- train_model$mean_height
+  sd_height <- train_model$sd_height
+  prob_adult <- dnorm(height, mean = mean_height, sd = sd_height)
+  
+  if (prob_adult >= 0.5) {
+    return("Person is classified as an adult based on height.")
+  } else {
+    return("Person is not classified as an adult based on height.")
+  }
+}
+
+# Example height data (in inches)
+height_data <- c(65, 68, 70, 72, 64, 69, 71, 66, 67, 70)
+
+# Train the model
+model <- univariate_train(height_data)
+
+# Visualize the probability density function
+curve(dnorm(x, mean = model$mean_height, sd = model$sd_height), 
+      from = min(height_data), to = max(height_data), 
+      xlab = "Height (in inches)", ylab = "Density", main = "Univariate Normal Density",
+      col = "blue")
+
+# Prompt user to input height
+height <- as.numeric(readline(prompt = "Enter the height (in inches): "))
+
+# Make prediction
+prediction <- univariate_predict(model, height)
+print(prediction)
